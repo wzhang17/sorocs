@@ -1,0 +1,27 @@
+---
+title: "Package sorocs"
+author: "Zhen Chen, Beom Seuk Hwang, Weimin Zhang" 
+date: "`r Sys.Date()`" 
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{sorocs-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(sorocs)
+```
+Description: A Bayesian nonparametric Dirichlet process mixtures to estimate the receiver operating characteristic (ROC) surfaces and the associated volume under the surface (VUS), a summary measure similar to the area under the 
+curve measure for ROC curves. To model distributions flexibly, including their skewness and multi-modality
+characteristics a Bayesian nonparametric Dirichlet process mixtures was used. Between-setting correlations is handled
+by dependent Dirichlet process mixtures that have bivariate distributions with nonzero
+correlations as their bases. To  accommodate ordering constraints, the stochastic ordering in the
+context of mixture distributions was adopted.

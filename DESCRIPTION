@@ -23,3 +23,7 @@ LazyData: TRUE
 RoxygenNote: 7.0.2
 URL: http://github.com/wzhang17/sorocs.git
 BugReports: http://github.com/wzhang17/sorocs/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
