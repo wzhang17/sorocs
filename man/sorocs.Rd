@@ -11,7 +11,36 @@ sorocs(
   Yvariable2,
   gridY = seq(0, 5, by = 0.05),
   Xvariable1,
-  Xvariable2
+  Xvariable2,
+  gam0 = -4.6,
+  gam1 = 9.2,
+  lamb0 = -4.6,
+  lamb1 = 9.2,
+  H = 30,
+  L = 30,
+  alpha1 = 1,
+  alpha2 = 1,
+  alpha3 = 1,
+  lambda1 = 1,
+  lambda2 = 1,
+  mu1 = matrix(c(0.5, 0.5), 2, 1),
+  mu2 = matrix(c(1, 1), 2, 1),
+  mu3 = matrix(c(3, 3), 2, 1),
+  m1 = c(0, 0),
+  m2 = c(0, 0),
+  m3 = c(0, 0),
+  A1 = 10 * diag(2),
+  A2 = 10 * diag(2),
+  A3 = 10 * diag(2),
+  Sig1 = matrix(c(1, 0.5, 0.5, 1), 2, 2),
+  Sig2 = matrix(c(1, 0.5, 0.5, 1), 2, 2),
+  Sig3 = matrix(c(1, 0.5, 0.5, 1), 2, 2),
+  nu = 6,
+  C0 = 10 * diag(2),
+  a1 = 2,
+  a2 = 2,
+  b1 = 0.1,
+  b2 = 0.1
 )
 }
 \arguments{
@@ -28,6 +57,64 @@ sorocs(
 \item{Xvariable1}{independent variable at setting 1}
 
 \item{Xvariable2}{independent variable at setting 2}
+
+\item{gam0}{Initial value for the test score distributions (e.g., a priori information between different disease populations for a single test or between multiple correlated tests)}
+
+\item{gam1}{Initial value for the test score distributions}
+
+\item{lamb0}{Initial value forthe test score distributions}
+
+\item{lamb1}{Initial value for the test score distributions}
+
+\item{H}{trucation level number for Dirichlet process prior trucation approximation}
+
+\item{L}{trucation level number for Dirichlet process prior trucation approximation}
+
+\item{alpha1}{fixed values of the precision parameters of the Dirichlet process}
+
+\item{alpha2}{fixed values of the precision parameters of the Dirichlet process}
+
+\item{alpha3}{fixed values of the precision parameters of the Dirichlet process}
+
+\item{lambda1}{fixed values of the precision parameters of the Dirichlet process}
+
+\item{lambda2}{fixed values of the precision parameters of the Dirichlet process}
+
+\item{mu1}{fixed values of the bivariate normal parameters of the Dirichlet process}
+
+\item{mu2}{fixed values of the bivariate normal parameters of the Dirichlet process}
+
+\item{mu3}{fixed values of the bivariate normal parameters of the Dirichlet process}
+
+\item{m1}{fixed values of the bivariate normal parameters of the Dirichlet process}
+
+\item{m2}{fixed values of the bivariate normal parameters of the Dirichlet process}
+
+\item{m3}{fixed values of the bivariate normal parameters of the Dirichlet process}
+
+\item{A1}{Initial values of the bivariate normal parameters of the Dirichlet process}
+
+\item{A2}{Initial values of the bivariate normal parameters of the Dirichlet process}
+
+\item{A3}{Initial values of the bivariate normal parameters of the Dirichlet process}
+
+\item{Sig1}{Initial values of the inverse Wishart distribution parameters of the Dirichlet process}
+
+\item{Sig2}{Initial values of the inverse Wishart distribution parameters of the Dirichlet process}
+
+\item{Sig3}{Initial values of the inverse Wishart distribution parameters of the Dirichlet process}
+
+\item{nu}{Initial values of the inverse Wishart distribution parameters of the Dirichlet process}
+
+\item{C0}{Initial values of the inverse Wishart distribution parameters of the Dirichlet process}
+
+\item{a1}{Initial shape values of the inverse-gamma base distributions for the Dirichlet process}
+
+\item{a2}{Initial shape values of the inverse-gamma base distributions for the Dirichlet process}
+
+\item{b1}{Initial scale values of the inverse-gamma base distributions for the Dirichlet process}
+
+\item{b2}{Initial scale values of the inverse-gamma base distributions for the Dirichlet process}
 }
 \value{
 A list of posterior estimates
@@ -50,7 +137,7 @@ try1 <- sorocs:::sorocs(Yvariable1 =asrm$logREscoremean2, Yvariable2=asrm$logREs
 gridY=seq(0,5,by=0.5), Xvariable1=asrm$TN12/asrm$JN12 , Xvariable2 =asrm$TNN12/asrm$JNN12)
 }
 \keyword{Dirichlet}
-\keyword{ROC}
-\keyword{VUS}
+\keyword{ROC,}
+\keyword{VUS,}
 \keyword{mixtures}
 \keyword{process}

@@ -14,7 +14,7 @@ Authors@R:
            role = "cre",
            email = "zhangwm@hotmail.com"))
 Description: a Bayesian nonparametric Dirichlet process mixtures to Eestimate the receiver operating characteristic (ROC) surfaces and the associated volume under the surface (VUS)
-License: None
+License: CC0
 Imports: MASS,
         MCMCpack,
         mvtnorm

@@ -1,5 +1,5 @@
 #' A Bayesian nonparametric Dirichlet process mixtures to Eestimate Receiver Operating Characteristic (ROC) Surface model
-#' @import MASS MCMCpack mvtnorm 
+#' @import MASS MCMCpack mvtnorm stats
 #' @description A Bayesian nonparametric Dirichlet process mixtures to estimate the receiver operating characteristic (ROC) 
 #' surfaces and the associated volume under the surface (VUS), a summary measure similar to the area under the 
 #' curve measure for ROC curves. To model distributions flexibly, including their skewness and multi-modality
@@ -15,44 +15,37 @@
 #' @param nsim Number of simulations
 #' @param nburn Burn in number
 #' @param gridY a regular sequence spanning the range of Y variable
+#' @param gam0 Initial value for the test score distributions (e.g., a priori information between different disease populations for a single test or between multiple correlated tests)
+#' @param gam1 Initial value for the test score distributions
+#' @param lamb0 Initial value forthe test score distributions
+#' @param lamb1 Initial value for the test score distributions
+#' @param alpha1 fixed values of the precision parameters of the Dirichlet process
+#' @param alpha2 fixed values of the precision parameters of the Dirichlet process
+#' @param alpha3 fixed values of the precision parameters of the Dirichlet process
+#' @param lambda1 fixed values of the precision parameters of the Dirichlet process
+#' @param lambda2 fixed values of the precision parameters of the Dirichlet process
+#' @param H trucation level number for Dirichlet process prior trucation approximation
+#' @param L trucation level number for Dirichlet process prior trucation approximation 
+#' @param mu1 fixed values of the bivariate normal parameters of the Dirichlet process
+#' @param mu2 fixed values of the bivariate normal parameters of the Dirichlet process
+#' @param mu3 fixed values of the bivariate normal parameters of the Dirichlet process
+#' @param m1 fixed values of the bivariate normal parameters of the Dirichlet process
+#' @param m2 fixed values of the bivariate normal parameters of the Dirichlet process
+#' @param m3 fixed values of the bivariate normal parameters of the Dirichlet process
+#' @param A1 Initial values of the bivariate normal parameters of the Dirichlet process
+#' @param A2 Initial values of the bivariate normal parameters of the Dirichlet process
+#' @param A3 Initial values of the bivariate normal parameters of the Dirichlet process
+#' @param Sig1 Initial values of the inverse Wishart distribution parameters of the Dirichlet process
+#' @param Sig2 Initial values of the inverse Wishart distribution parameters of the Dirichlet process
+#' @param Sig3 Initial values of the inverse Wishart distribution parameters of the Dirichlet process
 
-# #' @param gam0 Initial value for the test score distributions (e.g., a priori information between different disease populations for a single test or between multiple correlated tests)
-# #' @param gam1 Initial value for the test score distributions
-# #' @param lamb0 Initial value forthe test score distributions
-# #' @param lamb1 Initial value for the test score distributions
-# #'
-# #' @param alpha1=1 fixed values of the precision parameters of the Dirichlet process
-# #' @param alpha2=1 fixed values of the precision parameters of the Dirichlet process
-# #' @param alpha3=1 fixed values of the precision parameters of the Dirichlet process
-
-# #' @param lambda1=1 fixed values of the precision parameters of the Dirichlet process
-# #' @param lambda2=1 fixed values of the precision parameters of the Dirichlet process
-
-# #' @param mu1 fixed values of the bivariate normal parameters of the Dirichlet process
-# #' @param mu2 fixed values of the bivariate normal parameters of the Dirichlet process
-# #' @param mu3 fixed values of the bivariate normal parameters of the Dirichlet process
-
-# #' @param m1 fixed values of the bivariate normal parameters of the Dirichlet process
-# #' @param m2 fixed values of the bivariate normal parameters of the Dirichlet process
-# #' @param m3 fixed values of the bivariate normal parameters of the Dirichlet process
-
-# #' @param A1 Initial values of the bivariate normal parameters of the Dirichlet process
-# #' @param A2 Initial values of the bivariate normal parameters of the Dirichlet process
-# #' @param A3 Initial values of the bivariate normal parameters of the Dirichlet process
-
-# #' @param Sig1 Initial values of the inverse Wishart distribution parameters of the Dirichlet process
-# #' @param Sig2 Initial values of the inverse Wishart distribution parameters of the Dirichlet process
-# #' @param Sig3 Initial values of the inverse Wishart distribution parameters of the Dirichlet process
-
-# #' @param nu Initial values of the inverse Wishart distribution parameters of the Dirichlet process
-# #' @param C0 Initial values of the inverse Wishart distribution parameters of the Dirichlet process
-
-# #' @param a1 Initial shape values of the inverse-gamma base distributions for the Dirichlet process
-# #' @param a2 Initial shape values of the inverse-gamma base distributions for the Dirichlet process
-
-# #' @param b1 Initial scale values of the inverse-gamma base distributions for the Dirichlet process
-# #' @param b2 Initial scale values of the inverse-gamma base distributions for the Dirichlet process
-#' @keywords ROC VUS Dirichlet process mixtures
+#' @param nu Initial values of the inverse Wishart distribution parameters of the Dirichlet process
+#' @param C0 Initial values of the inverse Wishart distribution parameters of the Dirichlet process
+#' @param a1 Initial shape values of the inverse-gamma base distributions for the Dirichlet process
+#' @param a2 Initial shape values of the inverse-gamma base distributions for the Dirichlet process
+#' @param b1 Initial scale values of the inverse-gamma base distributions for the Dirichlet process
+#' @param b2 Initial scale values of the inverse-gamma base distributions for the Dirichlet process
+#' @keywords ROC, VUS, Dirichlet process mixtures
 #' @export
 #' @return A list of posterior estimates
 #' @examples
@@ -71,18 +64,58 @@ sorocs <-function(## iterations
   gridY = seq(0,5,by=0.05),
   ## make X1 and X2
   Xvariable1,
-  Xvariable2
+  Xvariable2,
+  gam0=-4.6 ,
+  gam1=9.2 ,
+  lamb0=-4.6 ,
+  lamb1=9.2,
+  ## initial values
+  H=30,       
+  L=30 ,        
+  ## fixed values
+  alpha1=1 ,
+  alpha2=1 ,
+  alpha3=1 ,
+  
+  lambda1=1 ,
+  lambda2=1 ,
+  
+  mu1=matrix(c(0.5,0.5),2,1),
+  mu2=matrix(c(1,1),2,1) ,
+  mu3=matrix(c(3,3),2,1) ,
+  
+  m1=c(0,0) ,
+  m2=c(0,0) ,
+  m3=c(0,0) ,
+  
+  A1=10*diag(2) ,
+  A2=10*diag(2) ,
+  A3=10*diag(2) ,
+  
+  Sig1=matrix(c(1,0.5,0.5,1),2,2) ,
+  Sig2=matrix(c(1,0.5,0.5,1),2,2) ,
+  Sig3=matrix(c(1,0.5,0.5,1),2,2) ,
+  
+  nu=6 ,
+  C0=10*diag(2) ,
+  
+  a1=2 ,
+  a2=2 ,
+  
+  b1=0.1 ,
+  b2=0.1 
+  
 ){
   force(gridY)
 
   ngrid=length(gridY)
   iteration=1:((nsim-nburn)/10)
   N=length(Yvariable1)
-  gam0=-4.6
-  gam1=9.2
+#  gam0=-4.6
+#  gam1=9.2
 
-  lamb0=-4.6
-  lamb1=9.2
+#  lamb0=-4.6
+#  lamb1=9.2
 
   ## make initial diseased population based on IEs' diagnosis
   pb0=1/(1+exp(gam0+gam1*Xvariable1))
@@ -99,8 +132,8 @@ sorocs <-function(## iterations
 
 
   ## initial values
-  H=30
-  L=30
+#  H=30
+#  L=30
 
   p_h1=rep(1,H)
   p_h2=rep(1,H)
@@ -149,37 +182,37 @@ sorocs <-function(## iterations
 
 
   ## fixed values
-  alpha1=1
-  alpha2=1
-  alpha3=1
+#  alpha1=1
+#  alpha2=1
+#  alpha3=1
 
-  lambda1=1
-  lambda2=1
+#  lambda1=1
+#  lambda2=1
 
-  mu1=matrix(c(0.5,0.5),2,1)
-  mu2=matrix(c(1,1),2,1)
-  mu3=matrix(c(3,3),2,1)
+#  mu1=matrix(c(0.5,0.5),2,1)
+#  mu2=matrix(c(1,1),2,1)
+#  mu3=matrix(c(3,3),2,1)
 
-  m1=c(0,0)
-  m2=c(0,0)
-  m3=c(0,0)
+#  m1=c(0,0)
+#  m2=c(0,0)
+#  m3=c(0,0)
 
-  A1=10*diag(2)
-  A2=10*diag(2)
-  A3=10*diag(2)
+#  A1=10*diag(2)
+#  A2=10*diag(2)
+#  A3=10*diag(2)
 
-  Sig1=matrix(c(1,0.5,0.5,1),2,2)
-  Sig2=matrix(c(1,0.5,0.5,1),2,2)
-  Sig3=matrix(c(1,0.5,0.5,1),2,2)
+#  Sig1=matrix(c(1,0.5,0.5,1),2,2)
+#  Sig2=matrix(c(1,0.5,0.5,1),2,2)
+#  Sig3=matrix(c(1,0.5,0.5,1),2,2)
 
-  nu=6
-  C0=10*diag(2)
+#  nu=6
+#  C0=10*diag(2)
 
-  a1=2
-  a2=2
+#  a1=2
+#  a2=2
 
-  b1=0.1
-  b2=0.1
+#  b1=0.1
+#  b2=0.1
 
 
   ## define output files
