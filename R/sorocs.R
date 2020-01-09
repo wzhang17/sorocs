@@ -45,14 +45,14 @@
 #' @param a2 Initial shape values of the inverse-gamma base distributions for the Dirichlet process
 #' @param b1 Initial scale values of the inverse-gamma base distributions for the Dirichlet process
 #' @param b2 Initial scale values of the inverse-gamma base distributions for the Dirichlet process
-#' @keywords ROC, VUS, Dirichlet process mixtures
+#' @keywords Dirichlet process mixtures
 #' @export
 #' @return A list of posterior estimates
 #' @examples
 #' library(MASS)
 #' library(MCMCpack)
 #' library(mvtnorm)
-#' data(sampledata)
+#' data(asrm)
 #' try1 <- sorocs:::sorocs(Yvariable1 =asrm$logREscoremean2, Yvariable2=asrm$logREscoremean1, 
 #' gridY=seq(0,5,by=0.5), Xvariable1=asrm$TN12/asrm$JN12 , Xvariable2 =asrm$TNN12/asrm$JNN12)
 

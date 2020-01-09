@@ -1,8 +1,7 @@
 Package: sorocs
 Version: 0.0.0.9000
-Title: a Bayesian Nonparametric Dirichlet Process Mixtures to Eestimate the Receiver Operating Characteristic (ROC) Surfaces and the Associated Volume Under the Surface (VUS)
-Authors@R:
-    c(person(given = "Zhen",
+Title: A Bayesian Nonparametric Dirichlet Process Mixtures to Estimate the Receiver Operating Characteristic (ROC) Surfaces and the Associated Volume Under the Surface (VUS)
+Authors@R: c(person(given = "Zhen",
            family = "Chen",
            role = "aut", 
            email = "chenzhe@mail.nih.gov"),
@@ -13,7 +12,7 @@ Authors@R:
            family = "Zhang",
            role = "cre",
            email = "zhangwm@hotmail.com"))
-Description: a Bayesian nonparametric Dirichlet process mixtures to Eestimate the receiver operating characteristic (ROC) surfaces and the associated volume under the surface (VUS)
+Description: A Bayesian nonparametric Dirichlet process mixtures to estimate the receiver operating characteristic (ROC) surfaces and the associated volume under the surface (VUS).
 License: CC0
 Imports: MASS,
         MCMCpack,
@@ -27,3 +26,5 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+Maintainer: Weimin Zhang <zhangwm@hotmail.com>
+

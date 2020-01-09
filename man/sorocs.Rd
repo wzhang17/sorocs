@@ -132,12 +132,10 @@ context of mixture distributions was adopted.
 library(MASS)
 library(MCMCpack)
 library(mvtnorm)
-data(sampledata)
+data(asrm)
 try1 <- sorocs:::sorocs(Yvariable1 =asrm$logREscoremean2, Yvariable2=asrm$logREscoremean1, 
 gridY=seq(0,5,by=0.5), Xvariable1=asrm$TN12/asrm$JN12 , Xvariable2 =asrm$TNN12/asrm$JNN12)
 }
 \keyword{Dirichlet}
-\keyword{ROC,}
-\keyword{VUS,}
 \keyword{mixtures}
 \keyword{process}
