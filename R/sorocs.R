@@ -1,4 +1,4 @@
-#' A Bayesian nonparametric Dirichlet process mixtures to Eestimate Receiver Operating Characteristic (ROC) Surface model
+#' A Bayesian Semiparametric Dirichlet Process Mixtures to Estimate Correlated ROC Surfaces with Stochastic Order Constraints
 #' @import MASS MCMCpack mvtnorm stats
 #' @description A Bayesian nonparametric Dirichlet process mixtures to estimate the receiver operating characteristic (ROC) 
 #' surfaces and the associated volume under the surface (VUS), a summary measure similar to the area under the 
@@ -48,13 +48,21 @@
 #' @keywords Dirichlet process mixtures
 #' @export
 #' @return A list of posterior estimates
+#' @references
+#' Zhen Chen, Beom Seuk Hwang. (2018)
+#' \emph{A Bayesian semiparametric approach to correlated ROC surfaces with stochastic order constraints}.
+#' Biometrics, 75, 539-550. \url{https://doi.org/10.1111/biom.12997}
 #' @examples
 #' library(MASS)
 #' library(MCMCpack)
 #' library(mvtnorm)
 #' data(asrm)
-#' try1 <- sorocs:::sorocs(Yvariable1 =asrm$logREscoremean2, Yvariable2=asrm$logREscoremean1, 
-#' gridY=seq(0,5,by=0.5), Xvariable1=asrm$TN12/asrm$JN12 , Xvariable2 =asrm$TNN12/asrm$JNN12)
+#' Y1 <- asrm$logREscoremean2[1:10]
+#' Y2 <- asrm$logREscoremean1[1:10]
+#' X1 <-asrm$TN12[1:20]/asrm$JN12[1:10]
+#' X2 <-asrm$TNN12[1:20]/asrm$JNN12[1:10]
+#' try1 <- sorocs:::sorocs( H = 12, L = 12, Yvariable1 =Y1, Yvariable2= Y2,
+#'                          gridY=seq(0,5,by=1), Xvariable1= X1, Xvariable2 =X2)
 
 sorocs <-function(## iterations
   nsim=4,
@@ -429,23 +437,6 @@ sorocs <-function(## iterations
     return(fn)
   }
 
-  ## For easier calculation for predictive densities
-
-  dnormfun <<- function(muvalue, sigmavalue, aNumber = gridY[i] ){
-    force(aNumber)
-    ansvalue=dnorm(aNumber,muvalue,sqrt(sigmavalue))
-    return(ansvalue)
-  }
-
-
-  pnormfun <<-  function(muvalue, sigmavalue, aNumber = gridY[i] ){
-    force(aNumber)
-    returnans=pnorm(aNumber,muvalue,sqrt(sigmavalue))
-    return(returnans)
-  }
-
-
-
   #####################
   ###### MCMC
   #####################
@@ -810,8 +801,8 @@ sorocs <-function(## iterations
     ## predictive pdf and cdf over Y11
     #rm(dnormfun)
     for (i in 1:ngrid){
-      Y11_pdf[,,i]=kronecker(p_h1,q_l1)*kronecker(theta_star11,sigma_star1,FUN="dnormfun")
-      Y11_cdf[,,i]=kronecker(p_h1,q_l1)*kronecker(theta_star11,sigma_star1,FUN="pnormfun")
+      Y11_pdf[,,i]=kronecker(p_h1,q_l1)*kronecker(theta_star11,sigma_star1,FUN="dnorm", x= gridY[i])
+      Y11_cdf[,,i]=kronecker(p_h1,q_l1)*kronecker(theta_star11,sigma_star1,FUN="pnorm", q= gridY[i] )
     }
     Y11_pred_pdf[gt,]=colSums(Y11_pdf,dims=2)
     Y11_pred_cdf[gt,]=colSums(Y11_cdf,dims=2)
@@ -819,8 +810,8 @@ sorocs <-function(## iterations
 
     ## predictive pdf and cdf over Y21
     for (i in 1:ngrid){
-      Y21_pdf[,,,i]=kronecker(p_h1,kronecker(q_l1,q_l2))*kronecker(theta_star21,kronecker(sigma_star1,sigma_star2,FUN="pmax"),FUN="dnormfun")
-      Y21_cdf[,,,i]=kronecker(p_h1,kronecker(q_l1,q_l2))*kronecker(theta_star21,kronecker(sigma_star1,sigma_star2,FUN="pmax"),FUN="pnormfun")
+      Y21_pdf[,,,i]=kronecker(p_h1,kronecker(q_l1,q_l2))*kronecker(theta_star21,kronecker(sigma_star1,sigma_star2,FUN="pmax"),FUN="dnorm", x= gridY[i])
+      Y21_cdf[,,,i]=kronecker(p_h1,kronecker(q_l1,q_l2))*kronecker(theta_star21,kronecker(sigma_star1,sigma_star2,FUN="pmax"),FUN="pnorm", q= gridY[i])
     }
     Y21_pred_pdf[gt,]=colSums(Y21_pdf,dims=3)
     Y21_pred_cdf[gt,]=colSums(Y21_cdf,dims=3)
@@ -828,8 +819,8 @@ sorocs <-function(## iterations
 
     ## predictive pdf and cdf over Y12
     for (i in 1:ngrid){
-      Y12_pdf[,,,i]=kronecker(p_h1,kronecker(p_h2,q_l1))*kronecker(kronecker(theta_star11,theta_star12,FUN="pmax"),sigma_star1,FUN="dnormfun")
-      Y12_cdf[,,,i]=kronecker(p_h1,kronecker(p_h2,q_l1))*kronecker(kronecker(theta_star11,theta_star12,FUN="pmax"),sigma_star1,FUN="pnormfun")
+      Y12_pdf[,,,i]=kronecker(p_h1,kronecker(p_h2,q_l1))*kronecker(kronecker(theta_star11,theta_star12,FUN="pmax"),sigma_star1,FUN="dnorm", x= gridY[i])
+      Y12_cdf[,,,i]=kronecker(p_h1,kronecker(p_h2,q_l1))*kronecker(kronecker(theta_star11,theta_star12,FUN="pmax"),sigma_star1,FUN="pnorm", q= gridY[i])
     }
     Y12_pred_pdf[gt,]=colSums(Y12_pdf,dims=3)
     Y12_pred_cdf[gt,]=colSums(Y12_cdf,dims=3)
@@ -837,8 +828,8 @@ sorocs <-function(## iterations
 
     ## predictive pdf and cdf over Y22
     for (i in 1:ngrid){
-      Y22_pdf[,,,,i]=kronecker(p_h1,kronecker(p_h2,kronecker(q_l1,q_l2)))*kronecker(kronecker(theta_star21,theta_star22,FUN="pmax"),kronecker(sigma_star1,sigma_star2,FUN="pmax"),FUN="dnormfun")
-      Y22_cdf[,,,,i]=kronecker(p_h1,kronecker(p_h2,kronecker(q_l1,q_l2)))*kronecker(kronecker(theta_star21,theta_star22,FUN="pmax"),kronecker(sigma_star1,sigma_star2,FUN="pmax"),FUN="pnormfun")
+      Y22_pdf[,,,,i]=kronecker(p_h1,kronecker(p_h2,kronecker(q_l1,q_l2)))*kronecker(kronecker(theta_star21,theta_star22,FUN="pmax"),kronecker(sigma_star1,sigma_star2,FUN="pmax"),FUN="dnorm", x= gridY[i])
+      Y22_cdf[,,,,i]=kronecker(p_h1,kronecker(p_h2,kronecker(q_l1,q_l2)))*kronecker(kronecker(theta_star21,theta_star22,FUN="pmax"),kronecker(sigma_star1,sigma_star2,FUN="pmax"),FUN="pnorm", q= gridY[i])
     }
     Y22_pred_pdf[gt,]=colSums(Y22_pdf,dims=4)
     Y22_pred_cdf[gt,]=colSums(Y22_cdf,dims=4)
@@ -846,8 +837,8 @@ sorocs <-function(## iterations
 
     ## predictive pdf and cdf over Y13
     for (i in 1:ngrid){
-      Y13_pdf[,,,,i]=kronecker(p_h1,kronecker(p_h2,kronecker(p_h3,q_l1)))*kronecker(kronecker(theta_star11,kronecker(theta_star12,theta_star13,FUN="pmax"),FUN="pmax"),sigma_star1,FUN="dnormfun")
-      Y13_cdf[,,,,i]=kronecker(p_h1,kronecker(p_h2,kronecker(p_h3,q_l1)))*kronecker(kronecker(theta_star11,kronecker(theta_star12,theta_star13,FUN="pmax"),FUN="pmax"),sigma_star1,FUN="pnormfun")
+      Y13_pdf[,,,,i]=kronecker(p_h1,kronecker(p_h2,kronecker(p_h3,q_l1)))*kronecker(kronecker(theta_star11,kronecker(theta_star12,theta_star13,FUN="pmax"),FUN="pmax"),sigma_star1,FUN="dnorm", x= gridY[i])
+      Y13_cdf[,,,,i]=kronecker(p_h1,kronecker(p_h2,kronecker(p_h3,q_l1)))*kronecker(kronecker(theta_star11,kronecker(theta_star12,theta_star13,FUN="pmax"),FUN="pmax"),sigma_star1,FUN="pnorm", q= gridY[i])
     }
     Y13_pred_pdf[gt,]=colSums(Y13_pdf,dims=4)
     Y13_pred_cdf[gt,]=colSums(Y13_cdf,dims=4)
@@ -856,8 +847,8 @@ sorocs <-function(## iterations
     ## predictive pdf and cdf over Y23
     for (h1 in 1:H){
       for (i in 1:ngrid){
-        Y23_pdf[,,,,i]=kronecker(p_h1[h1],kronecker(p_h2,kronecker(p_h3,kronecker(q_l1,q_l2))))*kronecker(kronecker(theta_star21[h1],kronecker(theta_star22,theta_star23,FUN="pmax"),FUN="pmax"),kronecker(sigma_star1,sigma_star2,FUN="pmax"),FUN="dnormfun")
-        Y23_cdf[,,,,i]=kronecker(p_h1[h1],kronecker(p_h2,kronecker(p_h3,kronecker(q_l1,q_l2))))*kronecker(kronecker(theta_star21[h1],kronecker(theta_star22,theta_star23,FUN="pmax"),FUN="pmax"),kronecker(sigma_star1,sigma_star2,FUN="pmax"),FUN="pnormfun")
+        Y23_pdf[,,,,i]=kronecker(p_h1[h1],kronecker(p_h2,kronecker(p_h3,kronecker(q_l1,q_l2))))*kronecker(kronecker(theta_star21[h1],kronecker(theta_star22,theta_star23,FUN="pmax"),FUN="pmax"),kronecker(sigma_star1,sigma_star2,FUN="pmax"),FUN="dnorm", x= gridY[i])
+        Y23_cdf[,,,,i]=kronecker(p_h1[h1],kronecker(p_h2,kronecker(p_h3,kronecker(q_l1,q_l2))))*kronecker(kronecker(theta_star21[h1],kronecker(theta_star22,theta_star23,FUN="pmax"),FUN="pmax"),kronecker(sigma_star1,sigma_star2,FUN="pmax"),FUN="pnorm", q= gridY[i])
       }
       Y23_pdf2[h1,]=colSums(Y23_pdf,dims=4)
       Y23_cdf2[h1,]=colSums(Y23_cdf,dims=4)

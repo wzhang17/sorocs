@@ -2,7 +2,7 @@
 % Please edit documentation in R/sorocs.R
 \name{sorocs}
 \alias{sorocs}
-\title{A Bayesian nonparametric Dirichlet process mixtures to Eestimate Receiver Operating Characteristic (ROC) Surface model}
+\title{A Bayesian Semiparametric Dirichlet Process Mixtures to Estimate Correlated ROC Surfaces with Stochastic Order Constraints}
 \usage{
 sorocs(
   nsim = 4,
@@ -133,8 +133,17 @@ library(MASS)
 library(MCMCpack)
 library(mvtnorm)
 data(asrm)
-try1 <- sorocs:::sorocs(Yvariable1 =asrm$logREscoremean2, Yvariable2=asrm$logREscoremean1, 
-gridY=seq(0,5,by=0.5), Xvariable1=asrm$TN12/asrm$JN12 , Xvariable2 =asrm$TNN12/asrm$JNN12)
+Y1 <- asrm$logREscoremean2[1:10]
+Y2 <- asrm$logREscoremean1[1:10]
+X1 <-asrm$TN12[1:20]/asrm$JN12[1:10]
+X2 <-asrm$TNN12[1:20]/asrm$JNN12[1:10]
+try1 <- sorocs:::sorocs( H = 12, L = 12, Yvariable1 =Y1, Yvariable2= Y2,
+                         gridY=seq(0,5,by=1), Xvariable1= X1, Xvariable2 =X2)
+}
+\references{
+Zhen Chen, Beom Seuk Hwang. (2018)
+\emph{A Bayesian semiparametric approach to correlated ROC surfaces with stochastic order constraints}.
+Biometrics, 75, 539-550. \url{https://doi.org/10.1111/biom.12997}
 }
 \keyword{Dirichlet}
 \keyword{mixtures}
