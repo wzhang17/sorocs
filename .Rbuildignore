@@ -5,3 +5,4 @@
 ^\.gitignore$
 ^vignettes\.gitignore$
 ^Read-and-delete-me$
+^cran-comments\.md$
