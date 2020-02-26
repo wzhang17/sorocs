@@ -181,3 +181,22 @@ But again, maybe I'm missing something.
 
 Max Turgeon
 
+——————————————————————————————————————————————————————————————————————
+Uwe Ligges <ligges@statistik.tu-dortmund.de>
+Wed 2/26/2020 7:49 AM
+You; CRAN
+
+Thanks, we see:
+
+
+   Found the following (possibly) invalid URLs:
+     URL: doi:10.1111/biom.12997
+       From: inst/doc/sorocs-vignette.html
+       Message: Invalid URI scheme (use \doi for DOIs in Rd markup)
+
+Within URL markup, you have to specify the full URL, of course.
+
+Please fix and resubmit.
+
+Best,
+Uwe Ligges

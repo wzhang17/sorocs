@@ -25,5 +25,7 @@ Description: A Bayesian nonparametric Dirichlet process mixtures to estimate the
  characteristics a Bayesian nonparametric Dirichlet process mixtures was used. Between-setting correlations is handled
  by dependent Dirichlet process mixtures that have bivariate distributions with nonzero
  correlations as their bases. To  accommodate ordering constraints, the stochastic ordering in the
- context of mixture distributions was adopted.The reference paper is:Zhen Chen, Beom Seuk Hwang, (2018) "A Bayesian semiparametric approach to correlated ROC surfaces with stochastic order constraints". Biometrics, 75, 539-550. <doi:10.1111/biom.12997>.
-  
+ context of mixture distributions was adopted.The reference paper is:Zhen Chen, Beom Seuk Hwang, (2018)
+ "A Bayesian semiparametric approach to correlated ROC surfaces with stochastic order constraints". Biometrics, 75,
+ 539-550. <https://doi.org/10.1111/biom.12997>.
+ 
